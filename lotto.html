@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casino Lotto</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    font-family:'Orbitron',sans-serif;
+    background:
+        radial-gradient(circle at top,#3a2500,#0a0a12 70%);
+    position:relative;
+}
+
+/* Animated Glow */
+
+body::before{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:
+    radial-gradient(circle at 20% 20%,rgba(255,215,0,.15),transparent 30%),
+    radial-gradient(circle at 80% 30%,rgba(57,246,255,.15),transparent 30%),
+    radial-gradient(circle at 50% 80%,rgba(255,46,224,.12),transparent 30%);
+
+    animation:bgMove 10s infinite alternate;
+}
+
+@keyframes bgMove{
+    from{transform:translateY(0);}
+    to{transform:translateY(-20px);}
+}
+
+/* Stars */
+
+body::after{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background-image:
+    radial-gradient(white 1px, transparent 1px);
+
+    background-size:50px 50px;
+
+    opacity:.12;
+}
+
+/* Roulette */
+
+.roulette{
+    position:absolute;
+    width:700px;
+    height:700px;
+    border-radius:50%;
+    border:12px solid gold;
+    opacity:.08;
+    animation:spin 30s linear infinite;
+}
+
+@keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+
+/* Slot Machines */
+
+.slot{
+    position:absolute;
+    font-size:7rem;
+    animation:pulse 2s infinite;
+}
+
+.left-slot{
+    left:30px;
+}
+
+.right-slot{
+    right:30px;
+}
+
+@keyframes pulse{
+    50%{
+        transform:scale(1.08);
+    }
+}
+
+/* Cards */
+
+.card{
+    position:absolute;
+    font-size:4rem;
+    opacity:.2;
+    animation:floatCard 8s ease-in-out infinite;
+}
+
+.card1{
+    left:8%;
+    top:20%;
+}
+
+.card2{
+    right:8%;
+    top:25%;
+}
+
+@keyframes floatCard{
+    50%{
+        transform:
+        translateY(-25px)
+        rotate(10deg);
+    }
+}
+
+/* Chips */
+
+.chip{
+    position:absolute;
+    top:-50px;
+    font-size:2rem;
+    animation:fall linear infinite;
+}
+
+@keyframes fall{
+
+    from{
+        transform:translateY(-100px);
+    }
+
+    to{
+        transform:translateY(120vh);
+    }
+}
+
+/* Main Card */
+
+.casino-card{
+
+    width:620px;
+    max-width:90%;
+
+    padding:40px;
+
+    border-radius:30px;
+
+    background:
+    rgba(10,10,20,.88);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,215,0,.5);
+
+    box-shadow:
+    0 0 20px gold,
+    0 0 60px rgba(255,215,0,.3),
+    0 0 120px rgba(57,246,255,.15);
+
+    text-align:center;
+
+    z-index:10;
+
+    animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+.casino-card h1{
+
+    color:gold;
+
+    margin-bottom:25px;
+
+    text-shadow:
+    0 0 10px gold,
+    0 0 30px gold;
+}
+
+input{
+
+    width:100%;
+
+    padding:16px;
+
+    margin-bottom:15px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:
+    rgba(255,255,255,.08);
+
+    color:white;
+
+    font-size:18px;
+}
+
+button{
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:15px;
+
+    margin-bottom:15px;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    background:
+    linear-gradient(
+    90deg,
+    #ffd700,
+    #ffae00);
+
+    transition:.3s;
+}
+
+button:hover{
+
+    transform:scale(1.05);
+
+    box-shadow:
+    0 0 15px gold,
+    0 0 40px gold;
+}
+
+#result{
+
+    min-height:50px;
+
+    margin-top:15px;
+
+    color:white;
+
+    font-size:22px;
+
+    text-shadow:
+    0 0 10px gold,
+    0 0 20px gold;
+}
+
+.jackpot-text{
+
+    color:#00ff88;
+
+    text-shadow:
+    0 0 10px #00ff88,
+    0 0 30px #00ff88;
+}
+
+.back-button{
+
+    display:inline-block;
+
+    margin-top:20px;
+
+    color:#39f6ff;
+
+    text-decoration:none;
+}
+
+</style>
+</head>
+<body>
+
+<div class="roulette"></div>
+
+<div class="slot left-slot">🎰</div>
+<div class="slot right-slot">🎰</div>
+
+<div class="card card1">🃏</div>
+<div class="card card2">♦️</div>
+
+<div class="casino-card">
+
+<h1>🎰 CASINO LOTTO 🎰</h1>
+
+<input id="maxNumber" type="number" placeholder="Maximum Number">
+
+<button onclick="startGame()">
+Generate Lucky Number
+</button>
+
+<input id="guess" type="number" placeholder="Your Guess">
+
+<button onclick="checkGuess()">
+Check Guess
+</button>
+
+<p id="result"></p>
+
+<a href="index.html" class="back-button">
+← Back to Website
+</a>
+
+</div>
+
+<script>
+
+/* Falling Chips */
+
+for(let i=0;i<30;i++){
+
+    const chip=document.createElement("div");
+
+    chip.className="chip";
+
+    chip.innerHTML=
+    Math.random()>0.5?"💰":"🪙";
+
+    chip.style.left=
+    Math.random()*100+"vw";
+
+    chip.style.animationDuration=
+    (5+Math.random()*8)+"s";
+
+    chip.style.animationDelay=
+    (Math.random()*8)+"s";
+
+    document.body.appendChild(chip);
+}
+
+/* Lotto */
+
+let lottoNumber=null;
+
+function startGame(){
+
+    const max=
+    Number(document.getElementById("maxNumber").value);
+
+    if(isNaN(max)||max<0){
+
+        document.getElementById("result").innerHTML=
+        "Enter a valid maximum number.";
+
+        return;
+    }
+
+    lottoNumber=
+    Math.floor(Math.random()*(max+1));
+
+    document.getElementById("result").innerHTML=
+    "🎲 Number generated! Make your guess.";
+}
+
+function checkGuess(){
+
+    if(lottoNumber===null){
+
+        document.getElementById("result").innerHTML=
+        "Generate a number first.";
+
+        return;
+    }
+
+    const guess=
+    Number(document.getElementById("guess").value);
+
+    if(guess===lottoNumber){
+
+        document.getElementById("result").innerHTML=
+        "<span class='jackpot-text'>🏆 JACKPOT! You guessed correctly!</span>";
+
+    }else{
+
+        document.getElementById("result").innerHTML=
+        "❌ Wrong! The number was " + lottoNumber;
+    }
+
+    setTimeout(()=>{
+
+        const playAgain=
+        confirm("Do you want to play another round?");
+
+        if(playAgain){
+
+            document.getElementById("maxNumber").value="";
+            document.getElementById("guess").value="";
+            document.getElementById("result").innerHTML="";
+
+            lottoNumber=null;
+
+        }else{
+
+            document.getElementById("result").innerHTML+=
+            "<br><br>🎰 Thanks for playing!";
+        }
+
+    },500);
+}
+
+</script>
+
+</body>
+</html>
