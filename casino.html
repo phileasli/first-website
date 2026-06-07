@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎰 Slot Machine</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Orbitron',sans-serif;
+    background:
+    radial-gradient(circle at top,#402700,#090912 70%);
+    overflow:hidden;
+}
+
+.machine{
+
+    width:700px;
+
+    padding:35px;
+
+    border-radius:30px;
+
+    background:rgba(10,10,20,.9);
+
+    border:2px solid gold;
+
+    box-shadow:
+    0 0 30px gold,
+    0 0 80px rgba(255,215,0,.3);
+
+    text-align:center;
+}
+
+h1{
+    color:gold;
+    margin-bottom:20px;
+}
+
+#coins{
+    color:gold;
+    margin-bottom:10px;
+}
+
+#modeDisplay{
+    color:#39f6ff;
+    margin-bottom:20px;
+}
+
+.settings{
+
+    margin-bottom:20px;
+}
+
+.settings button{
+
+    padding:10px 20px;
+    margin:5px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.slots{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+    margin:30px 0;
+}
+
+.slot{
+
+    width:120px;
+    height:120px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:4rem;
+
+    border-radius:20px;
+
+    background:#111;
+
+    border:2px solid gold;
+
+    box-shadow:
+    0 0 20px gold;
+}
+
+.spin-animation{
+
+    animation:spin .1s infinite;
+}
+
+@keyframes spin{
+
+    50%{
+        transform:translateY(-5px);
+    }
+}
+
+#spinBtn{
+
+    width:250px;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:15px;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    color:white;
+
+    background:
+    linear-gradient(90deg,#ff0000,#ff5555);
+
+    box-shadow:
+    0 0 25px red;
+}
+
+#result{
+
+    min-height:60px;
+
+    margin-top:20px;
+
+    color:white;
+
+    font-size:24px;
+}
+
+#tryAgainBtn{
+
+    display:none;
+
+    margin-top:15px;
+
+    padding:15px 30px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:red;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.back{
+
+    display:inline-block;
+
+    margin-top:25px;
+
+    color:#39f6ff;
+
+    text-decoration:none;
+}
+
+.jackpot{
+
+    animation:flash .3s 6;
+}
+
+@keyframes flash{
+
+    50%{
+        filter:brightness(2);
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div class="machine">
+
+<h1>🎰 SLOT MACHINE 🎰</h1>
+
+<h2 id="coins">🪙 Coins: 100</h2>
+
+<h3 id="modeDisplay">Mode: Easy 🟢</h3>
+
+<div class="settings">
+
+<button onclick="setMode('easy')">
+Easy
+</button>
+
+<button onclick="setMode('medium')">
+Medium
+</button>
+
+<button onclick="setMode('hard')">
+Hard
+</button>
+
+</div>
+
+<div class="slots">
+
+<div class="slot" id="slot1">
+❓
+</div>
+
+<div class="slot" id="slot2">
+❓
+</div>
+
+<div class="slot" id="slot3">
+❓
+</div>
+
+</div>
+
+<button id="spinBtn" onclick="spin()">
+SPIN
+</button>
+
+<p id="result"></p>
+
+<button id="tryAgainBtn" onclick="resetMachine()">
+TRY AGAIN
+</button>
+
+<br>
+
+<a class="back" href="index.html">
+← Back to Website
+</a>
+
+</div>
+
+<script>
+
+let coins = 100;
+
+let mode = "easy";
+
+function setMode(newMode){
+
+    mode = newMode;
+
+    document.getElementById("modeDisplay").innerHTML =
+    "Mode: " +
+    newMode.charAt(0).toUpperCase() +
+    newMode.slice(1);
+}
+
+function getSymbols(){
+
+    if(mode === "easy"){
+
+        return [
+            "🍒",
+            "🍋",
+            "🍎"
+        ];
+    }
+
+    if(mode === "medium"){
+
+        return [
+            "🍒",
+            "🍋",
+            "🍎",
+            "⭐"
+        ];
+    }
+
+    return [
+        "🍒",
+        "🍋",
+        "🍎",
+        "⭐",
+        "7️⃣"
+    ];
+}
+
+function randomSymbol(){
+
+    const symbols =
+    getSymbols();
+
+    return symbols[
+        Math.floor(
+            Math.random() *
+            symbols.length
+        )
+    ];
+}
+
+function spin(){
+
+    document.getElementById(
+    "tryAgainBtn").style.display =
+    "none";
+
+    coins--;
+
+    updateCoins();
+
+    const slot1 =
+    document.getElementById("slot1");
+
+    const slot2 =
+    document.getElementById("slot2");
+
+    const slot3 =
+    document.getElementById("slot3");
+
+    slot1.classList.add(
+    "spin-animation");
+
+    slot2.classList.add(
+    "spin-animation");
+
+    slot3.classList.add(
+    "spin-animation");
+
+    let interval =
+    setInterval(() => {
+
+        slot1.innerHTML =
+        randomSymbol();
+
+        slot2.innerHTML =
+        randomSymbol();
+
+        slot3.innerHTML =
+        randomSymbol();
+
+    },100);
+
+    setTimeout(() => {
+
+        clearInterval(interval);
+
+        const s1 =
+        randomSymbol();
+
+        const s2 =
+        randomSymbol();
+
+        const s3 =
+        randomSymbol();
+
+        slot1.innerHTML = s1;
+        slot2.innerHTML = s2;
+        slot3.innerHTML = s3;
+
+        slot1.classList.remove(
+        "spin-animation");
+
+        slot2.classList.remove(
+        "spin-animation");
+
+        slot3.classList.remove(
+        "spin-animation");
+
+        checkWin(
+        s1,s2,s3);
+
+    },2000);
+}
+
+function checkWin(
+s1,s2,s3){
+
+    if(
+    s1===s2 &&
+    s2===s3){
+
+        let reward = 50;
+
+        if(
+        s1==="⭐"){
+            reward=100;
+        }
+
+        if(
+        s1==="7️⃣"){
+            reward=200;
+        }
+
+        coins += reward;
+
+        updateCoins();
+
+        document.getElementById(
+        "result").innerHTML =
+        "🏆 JACKPOT! +" +
+        reward +
+        " Coins";
+
+        document.body.classList.add(
+        "jackpot");
+
+        setTimeout(()=>{
+
+            document.body.classList.remove(
+            "jackpot");
+
+        },1800);
+
+    }else{
+
+        document.getElementById(
+        "result").innerHTML =
+        "❌ No Match";
+
+        document.getElementById(
+        "tryAgainBtn").style.display =
+        "inline-block";
+    }
+}
+
+function updateCoins(){
+
+    const coinsElement =
+    document.getElementById(
+    "coins");
+
+    coinsElement.innerHTML =
+    "🪙 Coins: " +
+    coins;
+
+    if(
+    coins < 0){
+
+        coinsElement.style.color =
+        "#ff4444";
+
+    }else{
+
+        coinsElement.style.color =
+        "gold";
+    }
+}
+
+function resetMachine(){
+
+    document.getElementById(
+    "slot1").innerHTML =
+    "❓";
+
+    document.getElementById(
+    "slot2").innerHTML =
+    "❓";
+
+    document.getElementById(
+    "slot3").innerHTML =
+    "❓";
+
+    document.getElementById(
+    "result").innerHTML =
+    "";
+
+    document.getElementById(
+    "tryAgainBtn").style.display =
+    "none";
+}
+
+</script>
+
+</body>
+</html>
