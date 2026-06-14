@@ -13,6 +13,7 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
+    user-select:none !important;
 }
 
 body{
@@ -229,6 +230,18 @@ Medium
 Hard
 </button>
 
+<button onclick="setMode('casino')">
+Casino
+</button>
+
+<button onclick="setMode('Ultra Extrem Casino')">
+Ultra Extrem Casino
+</button>
+
+<button id="stopModeBtn" onclick="toggleStopMode()">
+Stop Mode: Auto
+</button>
+
 </div>
 
 <div class="slots">
@@ -257,6 +270,12 @@ SPIN
 TRY AGAIN
 </button>
 
+<button id="resetButton">
+
+🗑 RESET COINS🪙⌫
+
+</button>
+
 <br>
 
 <a class="back" href="index.html">
@@ -266,8 +285,17 @@ TRY AGAIN
 </div>
 
 <script>
+let stopMode = "auto";
+let spinning = false;
+let spinInterval;
 
-let coins = 100;
+let coins = localStorage.getItem("casinoCoins");
+
+if (coins === null) {
+    coins = 100;
+} else {
+    coins = Number(coins);
+}
 
 let mode = "easy";
 
@@ -281,12 +309,30 @@ function setMode(newMode){
     newMode.slice(1);
 }
 
+function toggleStopMode(){
+
+    if(stopMode === "auto"){
+
+        stopMode = "manual";
+
+        document.getElementById("stopModeBtn").innerHTML =
+        "Stop Mode: Manual";
+
+    }else{
+
+        stopMode = "auto";
+
+        document.getElementById("stopModeBtn").innerHTML =
+        "Stop Mode: Auto";
+
+    }
+}
 function getSymbols(){
 
     if(mode === "easy"){
 
         return [
-            "🍒",
+            "🍑",
             "🍋",
             "🍎"
         ];
@@ -295,18 +341,62 @@ function getSymbols(){
     if(mode === "medium"){
 
         return [
-            "🍒",
+            "🍑",
             "🍋",
             "🍎",
             "⭐"
         ];
     }
 
+     if(mode === "hard"){
+
     return [
-        "🍒",
+        "🍑",
         "🍋",
         "🍎",
         "⭐",
+        "💣"
+    ];
+}
+    if (mode === "casino"){
+
+       return [
+        "🍑",
+        "🍋",
+        "🍎", 
+        "⭐",
+        "💣",
+        "7️⃣"
+    ];
+}
+      return [
+        "🍑",
+        "🍋",
+        "🍎", 
+        "🍊",
+        "🍇",
+        "🍉",
+        "🍌",
+        "🍍",
+        "🥝",
+        "🥭",
+        "🍓",
+        "🍒",
+        "🍐",
+        "🫐",
+        "🍈",
+        "🍅",
+        "🍆",
+        "🥑",
+        "🥦",
+        "🥒",
+        "🌽",
+        "🥕",
+        "🫒",
+        "💎",
+        "🥥",
+        "⭐",
+        "💣",
         "7️⃣"
     ];
 }
@@ -324,13 +414,65 @@ function randomSymbol(){
     ];
 }
 
+function stopSpin(){
+
+        if(!spinning){
+
+        return;
+
+    }
+
+    clearInterval(spinInterval);
+
+    const slot1 = document.getElementById("slot1");
+    const slot2 = document.getElementById("slot2");
+    const slot3 = document.getElementById("slot3");
+
+    const s1 = randomSymbol();
+    const s2 = randomSymbol();
+    const s3 = randomSymbol();
+
+    slot1.innerHTML = s1;
+    slot2.innerHTML = s2;
+    slot3.innerHTML = s3;
+
+    slot1.classList.remove("spin-animation");
+    slot2.classList.remove("spin-animation");
+    slot3.classList.remove("spin-animation");
+
+    spinning = false;
+
+    document.getElementById("spinBtn").innerHTML = "SPIN";
+
+    checkWin(s1,s2,s3);
+}
+
 function spin(){
+
+    if(spinning){
+
+        if(stopMode === "manual"){
+
+            stopSpin();
+
+        }
+
+        return;
+    }
 
     document.getElementById(
     "tryAgainBtn").style.display =
     "none";
 
     coins--;
+    localStorage.setItem("casinoCoins", coins);
+
+    spinning = true;
+
+document.getElementById("spinBtn").innerHTML =
+stopMode === "manual"
+? "STOP"
+: "SPINNING...";
 
     updateCoins();
 
@@ -352,52 +494,26 @@ function spin(){
     slot3.classList.add(
     "spin-animation");
 
-    let interval =
-    setInterval(() => {
+let interval = spinInterval =
+setInterval(() => {
 
-        slot1.innerHTML =
-        randomSymbol();
+    slot1.innerHTML = randomSymbol();
+    slot2.innerHTML = randomSymbol();
+    slot3.innerHTML = randomSymbol();
 
-        slot2.innerHTML =
-        randomSymbol();
+},100);
 
-        slot3.innerHTML =
-        randomSymbol();
-
-    },100);
+if(stopMode === "auto"){
 
     setTimeout(() => {
 
-        clearInterval(interval);
-
-        const s1 =
-        randomSymbol();
-
-        const s2 =
-        randomSymbol();
-
-        const s3 =
-        randomSymbol();
-
-        slot1.innerHTML = s1;
-        slot2.innerHTML = s2;
-        slot3.innerHTML = s3;
-
-        slot1.classList.remove(
-        "spin-animation");
-
-        slot2.classList.remove(
-        "spin-animation");
-
-        slot3.classList.remove(
-        "spin-animation");
-
-        checkWin(
-        s1,s2,s3);
+        stopSpin();
 
     },2000);
+
 }
 
+}
 function checkWin(
 s1,s2,s3){
 
@@ -405,19 +521,45 @@ s1,s2,s3){
     s1===s2 &&
     s2===s3){
 
-        let reward = 50;
+        let reward = 800;
 
         if(
-        s1==="⭐"){
+        s1==="🍑"){
             reward=100;
         }
 
         if(
+        s1==="🍎"){
+            reward=100;
+        }
+
+        if(
+        s1==="🍋"){
+            reward=100;
+        }
+
+        if(
+        s1==="⭐"){
+            reward=900;
+        }
+
+        if(
+        s1==="💣"){
+            reward=1000;
+        }
+
+                      if(
+        s1==="💎"){
+            reward=3000;
+        }
+
+               if(
         s1==="7️⃣"){
-            reward=200;
+            reward=5000;
         }
 
         coins += reward;
+        localStorage.setItem("casinoCoins", coins);
 
         updateCoins();
 
@@ -474,26 +616,29 @@ function updateCoins(){
 
 function resetMachine(){
 
-    document.getElementById(
-    "slot1").innerHTML =
-    "❓";
+    document.getElementById("slot1").innerHTML = "❓";
+    document.getElementById("slot2").innerHTML = "❓";
+    document.getElementById("slot3").innerHTML = "❓";
 
-    document.getElementById(
-    "slot2").innerHTML =
-    "❓";
+    document.getElementById("result").innerHTML = "";
 
-    document.getElementById(
-    "slot3").innerHTML =
-    "❓";
-
-    document.getElementById(
-    "result").innerHTML =
-    "";
-
-    document.getElementById(
-    "tryAgainBtn").style.display =
+    document.getElementById("tryAgainBtn").style.display =
     "none";
 }
+
+document.getElementById("resetButton").addEventListener("click", () => {
+
+    if(confirm("Reset all coins back to 100?")){
+
+        coins = 100;
+
+        localStorage.setItem("casinoCoins", coins);
+
+        updateCoins();
+    }
+
+});
+
 
 </script>
 
