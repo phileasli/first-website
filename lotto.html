@@ -332,6 +332,20 @@ Check Guess
 
 <script>
 
+    document.addEventListener("selectstart", (e) => {
+    e.preventDefault();
+});
+
+document.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+});
+
+document.addEventListener("touchstart", (e) => {
+    if (e.touches.length > 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
 /* Falling Chips */
 
 for(let i=0;i<30;i++){

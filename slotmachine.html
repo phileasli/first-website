@@ -291,6 +291,21 @@ TRY AGAIN
 </div>
 
 <script>
+
+    document.addEventListener("selectstart", (e) => {
+    e.preventDefault();
+});
+
+document.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+});
+
+document.addEventListener("touchstart", (e) => {
+    if (e.touches.length > 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
 let stopMode = "auto";
 let spinning = false;
 let spinInterval;
