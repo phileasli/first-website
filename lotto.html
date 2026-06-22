@@ -9,6 +9,17 @@
 
 <style>
 
+    .machine * {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+    html, body, .machine, .slots, .slot {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
 * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -296,7 +307,7 @@ button:hover{
 
 </style>
 </head>
-<body>
+<body onselectstart="return false">
 
 <div class="roulette"></div>
 
@@ -332,19 +343,13 @@ Check Guess
 
 <script>
 
-    document.addEventListener("selectstart", (e) => {
-    e.preventDefault();
-});
-
 document.addEventListener("contextmenu", (e) => {
     e.preventDefault();
 });
 
-document.addEventListener("touchstart", (e) => {
-    if (e.touches.length > 1) {
-        e.preventDefault();
-    }
-}, { passive: false });
+document.addEventListener("selectstart", function(e) {
+    e.preventDefault();
+});
 
 /* Falling Chips */
 
