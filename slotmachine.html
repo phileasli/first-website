@@ -231,7 +231,7 @@ h1{
 
 <h2 id="coins">🪙 Coins: 100</h2>
 
-<h3 id="modeDisplay">Mode: Easy🟢</h3>
+<h3 id="modeDisplay">Mode: Easy 🟢</h3>
 
 <div class="settings">
 
@@ -329,10 +329,25 @@ function setMode(newMode){
 
     mode = newMode;
 
-    document.getElementById("modeDisplay").innerHTML =
-    "Mode: " +
-    newMode.charAt(0).toUpperCase() +
-    newMode.slice(1);
+    let text = "";
+
+    if(newMode === "easy"){
+        text = "Mode: Easy 🟢";
+    }
+    else if(newMode === "medium"){
+        text = "Mode: Medium 🟡";
+    }
+    else if(newMode === "hard"){
+        text = "Mode: Hard 🔴";
+    }
+    else if(newMode === "casino"){
+        text = "Mode: Casino 🎰";
+    }
+    else if(newMode === "Ultra Extrem Casino"){
+        text = "Mode: Ultra Extrem Casino 👹🎰👹";
+    }
+
+    document.getElementById("modeDisplay").innerHTML = text;
 }
 
 function toggleStopMode(){
